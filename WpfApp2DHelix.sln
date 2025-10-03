@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35913.81 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfApp2DHelix", "WpfApp2DHelix\WpfApp2DHelix.csproj", "{83D31C95-94BE-4A0A-A1D4-8AB9966514E1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{83D31C95-94BE-4A0A-A1D4-8AB9966514E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83D31C95-94BE-4A0A-A1D4-8AB9966514E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83D31C95-94BE-4A0A-A1D4-8AB9966514E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83D31C95-94BE-4A0A-A1D4-8AB9966514E1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2CB6249C-37B2-43DC-A81D-38B934E0977D}
+	EndGlobalSection
+EndGlobal
