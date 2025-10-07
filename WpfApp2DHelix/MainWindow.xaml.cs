@@ -211,6 +211,9 @@ namespace WpfApp2DHelix
             if (pointSphere != null) view1.Children.Add(pointSphere);
             if (coordLabel != null) view1.Children.Add(coordLabel);
             if (pointSphere != null) DrawGuides(pointSphere.Center);
+
+
+            AdjustCameraToGrid();
         }
 
 
@@ -344,21 +347,12 @@ namespace WpfApp2DHelix
                 double newY = current.Y;
                 double newZ = current.Z;
 
-                if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
-                {
-                    // Control Z movement
-                    double dz = -(pos.Y - lastMousePos.Y) * (maxZ - minZ) / 500;
-                    newZ = Math.Max(minZ, Math.Min(maxZ, current.Z + dz));
-                }
-                else
-                {
-                    // Control X/Y movement
-                    double dx = (pos.X - lastMousePos.X) * (maxX - minX) / 500;
-                    double dy = -(pos.Y - lastMousePos.Y) * (maxY - minY) / 500;
+                //Control XY
+                double dx = (pos.X - lastMousePos.X) * (maxX - minX) / 500;
+                double dy = -(pos.Y - lastMousePos.Y) * (maxY - minY) / 500;
 
-                    newX = Math.Max(minX, Math.Min(maxX, current.X + dx));
-                    newY = Math.Max(minY, Math.Min(maxY, current.Y + dy));
-                }
+                newX = Math.Max(minX, Math.Min(maxX, current.X + dx));
+                newY = Math.Max(minY, Math.Min(maxY, current.Y + dy));
 
                 //  Snap-to-Grid logic with separate steps
                 double stepX = Convert.ToDouble(txtStepX.Text), stepY = Convert.ToDouble(txtStepY.Text);
@@ -429,40 +423,6 @@ namespace WpfApp2DHelix
             }
         }
 
-        //private void view1_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        //{
-        //    if (isDragging)
-        //    {
-        //        isDragging = false;
-        //        view1.ReleaseMouseCapture();
-
-        //        // Final snap-to-grid adjustment
-        //        if (pointSphere != null && chkSnapToGrid.IsChecked == true)
-        //        {
-        //            double stepX = 1, stepY = 1, stepZ = 1;
-        //            double.TryParse(txtStepX.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out stepX);
-        //            double.TryParse(txtStepY.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out stepY);
-        //            double.TryParse(txtStepZ.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out stepZ);
-
-        //            double newX = GetSnappedValue(pointSphere.Center.X, stepX);
-        //            double newY = GetSnappedValue(pointSphere.Center.Y, stepY);
-        //            double newZ = GetSnappedValue(pointSphere.Center.Z, stepZ);
-
-        //            UpdatePoint(newX, newY, newZ);
-        //            UpdateSphereLabel(new Point3D(newX, newY, newZ));
-
-        //            txtX.Text = newX.ToString("F2");
-        //            txtY.Text = newY.ToString("F2");
-        //            txtZ.Text = newZ.ToString("F2");
-
-        //            sliderX.Value = newX;
-        //            sliderY.Value = newY;
-        //            sliderZ.Value = newZ;
-        //        }
-        //    }
-        //}
-
-
         private void view1_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             if (isDragging)
@@ -497,22 +457,6 @@ namespace WpfApp2DHelix
                 }
             }
         }
-
-        //private void TxtPointerInput_LostFocus(object sender, RoutedEventArgs e)
-        //{
-        //    if (sender is TextBox tb)
-        //    {
-        //        if (string.IsNullOrWhiteSpace(tb.Text))
-        //            tb.Text = "0";
-
-        //        // Format to fixed decimals on focus loss
-        //        double value = ParseOrDefault(tb.Text);
-        //        int decimals = tb == txtX ? decimalX : tb == txtY ? decimalY : decimalZ;
-        //        tb.Text = value.ToString("F" + decimals, CultureInfo.InvariantCulture);
-        //        tb.CaretIndex = tb.Text.Length; // put caret at the end
-        //    }
-        //}
-
         private void TxtPointerInput_LostFocus(object sender, RoutedEventArgs e)
         {
             if (sender is TextBox tb)
@@ -573,14 +517,6 @@ namespace WpfApp2DHelix
                 double x = Clamp(ParseOrDefault(txtX.Text), minX, maxX);
                 double y = Clamp(ParseOrDefault(txtY.Text), minY, maxY);
                 double z = Clamp(ParseOrDefault("0"), minZ, maxZ);
-
-                // Update point and sliders WITHOUT overwriting text
-                //UpdatePoint(x, y, z);
-                //UpdateSphereLabel(new Point3D(x, y, 0));
-
-                //sliderX.Value = x;
-                //sliderY.Value = y;
-                //sliderZ.Value = z;
 
                 txtUpdating = false;
             }
@@ -645,104 +581,6 @@ namespace WpfApp2DHelix
                 isUpdatingUI = false;
             }
         }
-        //private void txtRange_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
-        //{
-        //    if (double.TryParse(txtMinX.Text, out double newMinX) &&
-        //       double.TryParse(txtMaxX.Text, out double newMaxX) &&
-        //       double.TryParse(txtMinY.Text, out double newMinY) &&
-        //       double.TryParse(txtMaxY.Text, out double newMaxY) &&
-        //       double.TryParse(txtMinZ.Text, out double newMinZ) &&
-        //       double.TryParse(txtMaxZ.Text, out double newMaxZ))
-        //    {
-        //        // update ranges
-        //        minX = newMinX; maxX = newMaxX;
-        //        minY = newMinY; maxY = newMaxY;
-        //        minZ = newMinZ; maxZ = newMaxZ;
-
-        //        // redraw grid
-        //        DrawGrid();
-
-        //        // reset sliders
-        //        sliderX.Minimum = minX; sliderX.Maximum = maxX;
-        //        sliderY.Minimum = minY; sliderY.Maximum = maxY;
-        //        sliderZ.Minimum = minZ; sliderZ.Maximum = maxZ;
-
-        //        // check if (0,0,0) is inside all ranges
-        //        bool hasZeroInX = (minX <= 0 && maxX >= 0);
-        //        bool hasZeroInY = (minY <= 0 && maxY >= 0);
-        //        bool hasZeroInZ = (minZ <= 0 && maxZ >= 0);
-
-        //        double defX, defY, defZ;
-
-        //        if (hasZeroInX && hasZeroInY && hasZeroInZ)
-        //        {
-        //            defX = defY = defZ = 0;
-        //        }
-        //        else
-        //        {
-        //            defX = minX;
-        //            defY = minY;
-        //            defZ = minZ;
-        //        }
-
-        //        // set slider values
-        //        sliderX.Value = defX;
-        //        sliderY.Value = defY;
-        //        sliderZ.Value = defZ;
-
-        //        // reset sphere and guides
-        //        UpdatePoint(defX, defY, defZ);
-        //        AddPoint(defX, defY, defZ);
-
-        //        isUpdatingUI = true;
-        //        txtX.Text = defX.ToString(CultureInfo.InvariantCulture);
-        //        txtY.Text = defY.ToString(CultureInfo.InvariantCulture);
-        //        txtZ.Text = defZ.ToString(CultureInfo.InvariantCulture);
-        //        txtCoordinateX.Text = defX.ToString(CultureInfo.InvariantCulture);
-        //        txtCoordinateY.Text = defY.ToString(CultureInfo.InvariantCulture);
-        //        txtCoordinateZ.Text = defZ.ToString(CultureInfo.InvariantCulture);
-        //        isUpdatingUI = false;
-        //    }
-        //}
-
-
-        //private void txtRange_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
-        //{
-        //    if (double.TryParse(txtMinX.Text, out double newMinX) &&
-        //       double.TryParse(txtMaxX.Text, out double newMaxX) &&
-        //       double.TryParse(txtMinY.Text, out double newMinY) &&
-        //       double.TryParse(txtMaxY.Text, out double newMaxY) &&
-        //       double.TryParse(txtMinZ.Text, out double newMinZ) &&
-        //       double.TryParse(txtMaxZ.Text, out double newMaxZ))
-        //    {
-        //        // update ranges
-        //        minX = newMinX; maxX = newMaxX;
-        //        minY = newMinY; maxY = newMaxY;
-        //        minZ = newMinZ; maxZ = newMaxZ;
-
-        //        // redraw grid
-        //        DrawGrid();
-
-        //        // reset sliders
-        //        sliderX.Minimum = minX; sliderX.Maximum = maxX; sliderX.Value = 0;
-        //        sliderY.Minimum = minY; sliderY.Maximum = maxY; sliderY.Value = 0;
-        //        sliderZ.Minimum = minZ; sliderZ.Maximum = maxZ; sliderZ.Value = 0;
-
-        //        // reset sphere and guides to (0,0,0)
-
-        //        //UpdatePoint(0, 0, 0);
-        //        UpdatePoint(minX, minY, minZ);
-        //        AddPoint(minX, minY, minZ);
-        //        isUpdatingUI = true;
-        //        txtX.Text = "0";
-        //        txtY.Text = "0";
-        //        txtZ.Text = "0";
-        //        txtCoordinateX.Text = "0";
-        //        txtCoordinateY.Text = "0";
-        //        txtCoordinateZ.Text = "0";
-        //        isUpdatingUI = false;
-        //    }
-        //}
 
         private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
@@ -854,50 +692,6 @@ namespace WpfApp2DHelix
                 if (sliderPointSize.Value > max) sliderPointSize.Value = max;
             }
         }
-
-        private void SwitchCamera_Click(object sender, RoutedEventArgs e)
-        {
-            // Get current camera (works for both Perspective and Orthographic)
-            var currentCam = view1.Camera;
-
-            Point3D position = currentCam.Position;
-            Vector3D lookDirection = currentCam.LookDirection;
-            Vector3D upDirection = currentCam.UpDirection;
-
-            // Calculate distance from camera to target (scene center = 0,0,0 here)
-            Point3D target = new Point3D(0, 0, 0);
-            double distance = (position - target).Length;
-
-            if (isPerspective)
-            {
-                // Switch to Orthographic while preserving view
-                view1.Camera = new OrthographicCamera
-                {
-                    Position = position,
-                    LookDirection = lookDirection,
-                    UpDirection = upDirection,
-                    Width = distance // width scales with distance
-                };
-
-                btnSwitchCamera.Content = "Switch to Perspective View";
-            }
-            else
-            {
-                // Switch to Perspective while preserving view
-                view1.Camera = new PerspectiveCamera
-                {
-                    Position = position,
-                    LookDirection = lookDirection,
-                    UpDirection = upDirection,
-                    FieldOfView = 45
-                };
-
-                btnSwitchCamera.Content = "Switch to Orthographic View";
-            }
-
-            isPerspective = !isPerspective;
-        }
-
         private void sliderPointSize_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             double size = Math.Clamp(e.NewValue, double.Parse(txtPointMin.Text), double.Parse(txtPointMax.Text));
@@ -1200,6 +994,32 @@ namespace WpfApp2DHelix
             }
         }
 
+
+        private void AdjustCameraToGrid()
+        {
+            // Compute center of current grid
+            double centerX = (minX + maxX) / 2.0;
+            double centerY = (minY + maxY) / 2.0;
+            double centerZ = 0;
+
+            // Estimate grid "size"
+            double sizeX = Math.Abs(maxX - minX);
+            double sizeY = Math.Abs(maxY - minY);
+            double size = Math.Max(sizeX, sizeY);
+
+            // Get your existing camera
+            var cam = view1.Camera as PerspectiveCamera;
+            if (cam == null) return;
+
+            // Place camera at an appropriate distance so the grid fits well
+            // The multiplier 2.0–3.0 decides how zoomed out the view is
+            double distance = size * 2.0;
+
+            // Reset camera position and look direction (static 2D view)
+            cam.Position = new Point3D(centerX, centerY, distance);
+            cam.LookDirection = new Vector3D(0, 0, -1);  // looking straight down Z-axis
+            cam.UpDirection = new Vector3D(0, 1, 0);     // Y up
+        }
 
     }
 }

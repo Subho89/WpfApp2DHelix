@@ -137,10 +137,10 @@ TickFrequency="0.1" IsSnapToTickEnabled="false" Margin="5,0"/>
                         </StackPanel>-->
 
                             <!-- Camera Switch -->
-                            <StackPanel Orientation="Horizontal" Margin="5">
+                            <!--<StackPanel Orientation="Horizontal" Margin="5">
                                 <TextBlock Text="View:" VerticalAlignment="Center"/>
                                 <Button x:Name="btnSwitchCamera" Content="Switch to Ortho" Margin="10,0,0,0" Click="SwitchCamera_Click"/>
-                            </StackPanel>
+                            </StackPanel>-->
 
                         </StackPanel>
                     </ScrollViewer>
