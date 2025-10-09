@@ -1019,6 +1019,8 @@ namespace WpfApp2DHelix
             cam.Position = new Point3D(centerX, centerY, distance);
             cam.LookDirection = new Vector3D(0, 0, -1);  // looking straight down Z-axis
             cam.UpDirection = new Vector3D(0, 1, 0);     // Y up
+
+            view1.ZoomExtents();
         }
 
     }
